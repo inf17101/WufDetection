@@ -1,0 +1,34 @@
+@startuml Main_Activiy
+
+start
+:Initialize Queue;
+  fork
+    :Start Audio Recording Stream;
+    repeat
+        :Read Audio Frame;
+        :Store Frame into Queue;
+    repeat while (Stop Event?) is (no)
+    -> yes;
+  fork again
+    :Initialize Audio Analyzer;
+    :Initialize Result Publisher;
+    repeat
+        :Pop Audio Frame From Queue;
+        :Analze Audio Frame;
+        if (Dog Bark Detected?) then (yes)
+            :Send Telegram Message With Audio;
+        else (no)
+        endif
+    repeat while (Stop Event?) is (no)
+    -> yes;
+  fork again
+    repeat
+        if (Is Keyboard Interrupt?) then (yes)
+            :Set Stop Event to True;
+        else (no)
+        endif
+    repeat while (Stop Event?) is (no)
+    -> yes;
+  end fork
+stop
+@enduml
